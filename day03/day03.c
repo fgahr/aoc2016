@@ -52,13 +52,13 @@ void part_two(FILE *f) {
 
 int main(int argc, const char *argv[]) {
   if (argc < 2) {
-    fprintf(stderr, "%s -- Error: No input file given.", argv[0]);
+    fprintf(stderr, "%s -- Error: No input file given.\n", argv[0]);
     exit(EXIT_FAILURE);
   }
 
   FILE *f = fopen(argv[1], "r");
   if (f == NULL) {
-    fprintf(stderr, "%s -- Error: File does not exist: %s", argv[0], argv[1]);
+    fprintf(stderr, "%s -- Error: File does not exist: %s\n", argv[0], argv[1]);
     exit(EXIT_FAILURE);
   }
   char inbuf[BUFSIZ];
