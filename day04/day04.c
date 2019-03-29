@@ -36,8 +36,8 @@ int by_frequency_desc(const void *a, const void *b) {
 bool frequencies_match(char letters[], elem letter_freqs[]) {
   qsort(letter_freqs, ALPHABET_SIZE, sizeof(elem*), &by_frequency_desc);
   for (int i = 0; i < NUM_MOST_FREQUENT; i++) {
-    /* It is assumed that letters are by descending frequency the most
-       frequent letters of the input line. */
+    /* We check the assertion that the given letters are by descending
+       frequency the most frequent of the input line. */
     if (letters[i] != letter_freqs[i].letter) {
       return false;
     }
