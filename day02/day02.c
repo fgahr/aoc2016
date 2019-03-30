@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../lib/lib.h"
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
@@ -118,19 +119,8 @@ void part_two(FILE *f) {
   unlock(f, &enter_fancy_pad);
 }
 
-int main(int argc, char *argv[]) {
-  if (argc < 2) {
-    fprintf(stderr, "%s -- Error: No input file given", argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
-  FILE *f = fopen(argv[1], "r");
-  if (f == NULL) {
-    fprintf(stderr, "%s -- Error: File does not exist: %s", argv[0], argv[1]);
-    exit(EXIT_FAILURE);
-  }
-  char inbuf[BUFSIZ];
-  setbuf(f, inbuf);
+int main(int argc, const char *argv[]) {
+  FILE *f = read_input(argc, argv);
 
   part_one(f);
   part_two(f);
