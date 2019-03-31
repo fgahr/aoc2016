@@ -20,9 +20,9 @@ char_counts *read_letter_frequencies(FILE *f) {
       letter_freqs[i].count[j] = 0;
     }
   }
-  char *lbuf;
-  size_t llen;
-  /* Collect letter frequencies from input. */
+  size_t llen = INPUT_LINE_LENGTH + 1;
+  char *lbuf = malloc(llen * sizeof(char));
+  /* Collect letter frequencies from the input. */
   while (getline(&lbuf, &llen, f) != EOF) {
     for (int i = 0; i < INPUT_LINE_LENGTH; i++) {
       int c = lbuf[i] - 'a';
