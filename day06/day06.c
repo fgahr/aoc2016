@@ -29,6 +29,7 @@ char_counts *read_letter_frequencies(FILE *f) {
       letter_freqs[i].count[c]++;
     }
   }
+  free(lbuf);
   return letter_freqs;
 }
 
