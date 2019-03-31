@@ -1,5 +1,7 @@
 # AOC Input Files
 input.txt
+# Used for test inputs
+test-in.txt
 
 # Prerequisites
 *.d

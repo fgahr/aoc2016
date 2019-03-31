@@ -17,7 +17,7 @@ FILE *read_input(int argc, const char *argv[]) {
     fprintf(stderr, "%s -- Error: File does not exist: %s\n", argv[0], argv[1]);
     exit(EXIT_FAILURE);
   }
-  char inbuf[BUFSIZ];
+  char *inbuf = malloc(BUFSIZ);
   setbuf(f, inbuf);
 
   return f;
