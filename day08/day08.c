@@ -99,8 +99,8 @@ void part_one_and_two(FILE *f) {
   screen s;
   turn_off_all(&s);
   /* Prepare to read input. */
-  char *lbuf;
-  size_t llen;
+  char *lbuf = NULL;
+  size_t llen = 0;
   while (getline(&lbuf, &llen, f) != EOF) {
     /* Follow next instruction. */
     if (strncmp(lbuf, "rect", 4) == 0) {
@@ -121,12 +121,15 @@ void part_one_and_two(FILE *f) {
     }
   }
 
+  free(lbuf);
   printf("%d\n\n", num_burning_lights(&s));
   print_screen(&s);
 }
 
 int main(int argc, const char *argv[]) {
   FILE *f = read_input(argc, argv);
+  char buffer[BUFSIZ];
+  setbuf(f, buffer);
 
   part_one_and_two(f);
 
