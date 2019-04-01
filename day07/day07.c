@@ -8,12 +8,13 @@
 #define INSIDE_BRACKETS 0
 #define OUTSIDE_BRACKETS 1
 
+/* Used to store information about ABA letter sequences. */
 typedef struct {
   char outer;
   char inner;
 } aba_seq;
 
-/* Whether str starts with a ABBA quartet. */
+/* Whether str starts with an ABBA quartet. */
 bool starts_with_abba(const char *str) {
   if (strlen(str) < 4) {
     return false;
@@ -138,6 +139,8 @@ void part_two(FILE *f) {
 
 int main(int argc, const char *argv[]) {
   FILE *f = read_input(argc, argv);
+  char buffer[BUFSIZ];
+  setbuf(f, buffer);
 
   part_one(f);
   part_two(f);
