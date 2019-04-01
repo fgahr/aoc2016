@@ -1,14 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../lib/lib.h"
+
+/* 1 if the side lengths a, b, and c can make up a valid triangle, else 0.
+
+   NOTE: Since the result is used in a sum, treat it as a number rather
+   than true/false. */
 int is_valid_triangle(int a, int b, int c) {
   return a < b + c && b < a + c && c < a + b;
 }
 
+/* The number of possible triangles in the file. */
 void part_one(FILE *f) {
   rewind(f);
-  char *lbuf;
-  size_t llen;
+  char *lbuf = NULL;
+  size_t llen = 0;
   ssize_t nread;
   int num_triangles = 0;
   int a, b, c;
@@ -21,10 +28,11 @@ void part_one(FILE *f) {
   free(lbuf);
 }
 
+/* The number of possible triangles in the file, assuming columnar data. */
 void part_two(FILE *f) {
   rewind(f);
-  char *lbuf;
-  size_t llen;
+  char *lbuf = NULL;
+  size_t llen = 0;
   int num_triangles = 0;
   /* Read three triangles at once, hence store all sides at the same time. */
   int a1, a2, a3;
@@ -51,16 +59,7 @@ void part_two(FILE *f) {
 }
 
 int main(int argc, const char *argv[]) {
-  if (argc < 2) {
-    fprintf(stderr, "%s -- Error: No input file given.\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
-  FILE *f = fopen(argv[1], "r");
-  if (f == NULL) {
-    fprintf(stderr, "%s -- Error: File does not exist: %s\n", argv[0], argv[1]);
-    exit(EXIT_FAILURE);
-  }
+  FILE *f = read_input(argc, argv);
   char inbuf[BUFSIZ];
   setbuf(f, inbuf);
 
