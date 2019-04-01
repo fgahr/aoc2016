@@ -9,6 +9,7 @@
 #define FANCY_PAD_SIZE 5
 #define NOP '\0'
 
+/* Enter a command on the simple pad. */
 char enter_simple_pad(const char *command) {
   /* Start at '5'. */
   static int pos_x = 1;
@@ -44,6 +45,7 @@ char enter_simple_pad(const char *command) {
   return simple_pad[pos_y][pos_x];
 }
 
+/* Enter a command on the fancy pad. */
 char enter_fancy_pad(const char *command) {
   /* Start at '5'. */
   static int pos_x = 0;
@@ -97,9 +99,10 @@ char enter_fancy_pad(const char *command) {
   return fancy_pad[pos_y][pos_x];
 }
 
+/* Determine the keypad sequence following the commands from the file. */
 void unlock(FILE *f, char (*enter_pad)(const char *)) {
-  char *lbuf;
-  size_t llen;
+  char *lbuf = NULL;
+  size_t llen = 0;
   ssize_t nread;
   while ((nread = getline(&lbuf, &llen, f)) != EOF) {
     printf("%c", enter_pad(lbuf));
@@ -109,11 +112,13 @@ void unlock(FILE *f, char (*enter_pad)(const char *)) {
   free(lbuf);
 }
 
+/* Determine the number sequence for the simple keypad. */
 void part_one(FILE *f) {
   rewind(f);
   unlock(f, &enter_simple_pad);
 }
 
+/* Determine the number sequence for the fancy keypad. */
 void part_two(FILE *f) {
   rewind(f);
   unlock(f, &enter_fancy_pad);
@@ -121,9 +126,12 @@ void part_two(FILE *f) {
 
 int main(int argc, const char *argv[]) {
   FILE *f = read_input(argc, argv);
+  char buffer[BUFSIZ];
+  setbuf(f, buffer);
 
   part_one(f);
   part_two(f);
+
   fclose(f);
   exit(EXIT_SUCCESS);
 }
