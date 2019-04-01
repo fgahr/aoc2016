@@ -67,6 +67,9 @@ void part_two(char_counts *letter_freqs) {
 
 int main(int argc, const char *argv[]) {
   FILE *f = read_input(argc, argv);
+  char buffer[BUFSIZ];
+  setbuf(f, buffer);
+
   char_counts *letter_freqs = read_letter_frequencies(f);
 
   part_one(letter_freqs);
