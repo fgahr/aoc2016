@@ -33,21 +33,22 @@ long decompressed_size(const char *fragment, int len) {
   for (int i = 0; i < len;) {
     if (fragment[i] == '(') {
       ++i;
-      int x, y;
+      int x = 0;
+      int y = 0;
       if (sscanf(&fragment[i], "%dx%d)", &x, &y) < 2) {
         fprintf(stderr, "Unable to read decompression marker: %s\n",
                 &fragment[i]);
         exit(EXIT_FAILURE);
       }
       /* Fast-forward just past the closing paren. */
-      while (fragment[i] != ')' && i < len) {
+      while (fragment[i] != ')') {
         ++i;
       }
       ++i;
       /* Abbreviated error handling. */
       assert(i < len);
       /* Recursively decompress the fragment of size x. */
-      char *buffer = malloc(x * sizeof(char));
+      char *buffer = malloc((x + 1) * sizeof(char));
       if (strncpy(buffer, &fragment[i], x) == NULL) {
         fprintf(stderr, "Unable to read fragment of length %d\n", x);
         exit(EXIT_FAILURE);
@@ -62,11 +63,6 @@ long decompressed_size(const char *fragment, int len) {
       ++size;
     }
   }
-  /* printf("Decompressed "); */
-  /* for (int i = 0; i < len; i++) { */
-  /*   printf("%c", fragment[i]); */
-  /* } */
-  /* printf(": %d\n", size); */
   return size;
 }
 
