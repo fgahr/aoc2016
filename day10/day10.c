@@ -43,16 +43,29 @@ void print_receiver(receiver *rec) {
          rec->id, rec->high_rec, rec->low_rec, rec->chip_one, rec->chip_two);
 }
 
+/* Create a new heap-allocated receiver of given type and ID and return a
+   pointer to it. */
+receiver *new_receiver(int rec_type, int id) {
+  receiver *rec = malloc(sizeof(receiver));
+  rec->rec_type = rec_type;
+  rec->id = id;
+  rec->chip_one = NO_CHIP;
+  rec->chip_two = NO_CHIP;
+  rec->high_rec = NULL;
+  rec->low_rec = NULL;
+  return rec;
+}
+
 /* Global variables to keep track of all objects. The scope of this program
    doesn't warrant having a state object for these. */
-receiver *recs;
+receiver **recs;
 uint rec_num;
 uint rec_cap;
 
 /* Initialize the receiver storage. */
 void init_receivers(void) {
   rec_cap = 64;
-  recs = malloc(rec_cap * sizeof(receiver));
+  recs = malloc(rec_cap * sizeof(receiver *));
   rec_num = 0;
 }
 
@@ -61,7 +74,7 @@ receiver *register_receiver(int rec_type, int id) {
   if (rec_num == (rec_cap - 1)) {
     /* Enlarge capacity. */
     rec_cap *= 2;
-    receiver *more_recs = realloc(recs, rec_cap * sizeof(receiver));
+    receiver **more_recs = realloc(recs, rec_cap * sizeof(receiver *));
     if (more_recs == NULL) {
       fprintf(stderr, "Allocating more receivers failed.");
       free(recs);
@@ -69,8 +82,7 @@ receiver *register_receiver(int rec_type, int id) {
     }
     recs = more_recs;
   }
-  recs[rec_num] = (receiver){rec_type, id, NO_CHIP, NO_CHIP, NULL, NULL};
-  receiver *new_rec = &recs[rec_num];
+  receiver *new_rec = recs[rec_num] = new_receiver(rec_type, id);
   ++rec_num;
   return new_rec;
 }
@@ -134,8 +146,8 @@ bool init_transfer(receiver *bot) {
 /* Find or create the receiver with given type and ID. */
 receiver *select_receiver(int rec_type, int id) {
   for (uint i = 0; i < rec_num; i++) {
-    if (recs[i].rec_type == rec_type && recs[i].id == id) {
-      return &recs[i];
+    if (recs[i]->rec_type == rec_type && recs[i]->id == id) {
+      return recs[i];
     }
   }
   return register_receiver(rec_type, id);
@@ -215,14 +227,14 @@ void part_one(FILE *f) {
     something_happened = false;
     for (uint i = 0; i < rec_num; i++) {
       /* Skip outputs. */
-      if (recs[i].rec_type != BOT_TYPE) {
+      if (recs[i]->rec_type != BOT_TYPE) {
         continue;
       }
-      if (part_one_winner(&recs[i])) {
-        printf("%d\n", recs[i].id);
+      if (part_one_winner(recs[i])) {
+        printf("%d\n", recs[i]->id);
       }
       /* Continue while transfers are still being performed. */
-      something_happened = (init_transfer(&recs[i]) || something_happened);
+      something_happened = (init_transfer(recs[i]) || something_happened);
     }
   }
 }
@@ -249,6 +261,9 @@ int main(int argc, const char *argv[]) {
 
   /* Cleanup. */
   fclose(f);
+  for (uint i = 0; i < rec_num; i++) {
+    free(recs[i]);
+  }
   free(recs);
   exit(EXIT_SUCCESS);
 }
